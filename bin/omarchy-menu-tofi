@@ -451,11 +451,12 @@ show_update_hardware_menu() {
 }
 
 show_system_menu() {
-    local opts="Back\n Lock\n󱄄 Screensaver\n󰜉 Restart\n󰐥 Shutdown"
+    local opts="Back\n Lock\n󱄄 Screensaver\n󰒲 Suspend\n󰜉 Restart\n󰐥 Shutdown"
     case $(menu "System" "$opts") in
         Back) show_main_menu ;;
         *Lock*) omarchy-lock-screen ;;
         *Screensaver*) omarchy-launch-screensaver force ;;
+        *Suspend*) systemctl suspend ;;
         *Restart*) omarchy-cmd-reboot ;;
         *Shutdown*) omarchy-cmd-shutdown ;;
         *) back_to show_main_menu ;;
