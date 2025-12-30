@@ -1,7 +1,7 @@
 [window]
 decorations = "none"
 padding = { x = 18, y = 14 }
-opacity = 0.3
+opacity = 0.4
 
 [font]
 size = 11.0
@@ -23,7 +23,7 @@ green   = "#8edb73"
 yellow  = "#f7c553"
 blue    = "#89b4fa"
 magenta = "#e29ef3"
-cyan    = "#47C8B9"
+cyan    = "#C1CBEF"
 white   = "#f8f8fa"
 
 [colors.bright]

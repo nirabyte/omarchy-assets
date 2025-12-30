@@ -188,69 +188,15 @@ show_setup_menu() {
   esac
 }
 
-# show_setup_power_menu() {
-#   profile=$(menu "Power Profile" "$(omarchy-powerprofiles-list)" "" "$(powerprofilesctl get)")
-
-#   if [[ "$profile" == "CNCLD" || -z "$profile" ]]; then
-#     back_to show_setup_menu
-#   else
-#     powerprofilesctl set "$profile"
-#   fi
-# }
-
 show_setup_power_menu() {
-    # Menu options: name|command
-    options=(
-        "Limit Charging (80%)|asusctl -c 80"
-        "Full Charging (100%)|asusctl -o"   # assuming -o is the correct flag for 100%; adjust if needed
-    )
+  profile=$(menu "Power Profile" "$(omarchy-powerprofiles-list)" "" "$(powerprofilesctl get)")
 
-    # Build menu string with each option on a new line
-    menu_str=""
-    for opt in "${options[@]}"; do
-        name="${opt%%|*}"
-        menu_str+="$name"$'\n'
-    done
-
-    # Show menu using your custom menu function
-    choice=$(menu "Select Battery Mode" "$menu_str" "")
-
-    # If user cancelled the menu, do nothing
-    [[ -z "$choice" ]] && return
-
-    # Find and execute command for selected choice, then send appropriate notification
-    for opt in "${options[@]}"; do
-        name="${opt%%|*}"
-        cmd="${opt##*|}"
-        if [[ "$choice" == "$name" ]]; then
-            if eval "$cmd"; then
-                case "$name" in
-                    "Limit Charging (80%)")
-                        notify-send 'Enabled Limit Charging 󱈏  (80%)' \
-                                    -i battery-good-symbolic \
-                                    -a "ASUS Battery Mode"
-                        ;;
-                    "Full Charging (100%)")
-                        notify-send 'Enabled Full Charging 󰂅  (100%)' \
-                                    -i battery-full-symbolic \
-                                    -a "ASUS Battery Mode"
-                        ;;
-                esac
-            else
-                notify-send "Battery Mode Change Failed" \
-                            "Command '$cmd' returned an error." \
-                            -i dialog-error
-            fi
-            return
-        fi
-    done
-
-    # If we get here, something went wrong (choice not found)
-    notify-send "Battery Mode" "Invalid selection." -i dialog-warning
+  if [[ "$profile" == "CNCLD" || -z "$profile" ]]; then
+    back_to show_setup_menu
+  else
+    powerprofilesctl set "$profile"
+  fi
 }
-
-
-
 
 show_setup_config_menu() {
   case $(menu "Setup" "  Hyprland\n  Hypridle\n  Hyprlock\n  Hyprsunset\n  Swayosd\n󰌧  Walker\n󰍜  Waybar\n󰞅  XCompose") in
@@ -498,10 +444,9 @@ show_update_password_menu() {
 }
 
 show_system_menu() {
-  case $(menu "System" "  Lock\n󱄄  Screensaver\n󰒲  Suspend\n󰜉  Restart\n󰐥  Shutdown") in
+  case $(menu "System" "  Lock\n󱄄  Screensaver\n󰜉  Restart\n󰐥  Shutdown") in
   *Lock*) omarchy-lock-screen ;;
   *Screensaver*) omarchy-launch-screensaver force ;;
-  *Suspend*) systemctl suspend ;;
   *Restart*) omarchy-cmd-reboot ;;
   *Shutdown*) omarchy-cmd-shutdown ;;
   *) back_to show_main_menu ;;
